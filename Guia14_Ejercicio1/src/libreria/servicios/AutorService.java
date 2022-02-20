@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package libreria.servicios;
 
 import java.util.Scanner;
 import libreria.entidades.Autor;
+import libreria.persistencia.AutorDAO;
 
 /**
  *
@@ -18,20 +14,67 @@ public class AutorService {
         Scanner leer = new Scanner(System.in).useDelimiter("\n");
 
         try {
-            Autor autor = new Autor();
-            System.out.print("Ingrese el ID del autor: ");
-            autor.setId(leer.nextInt());
             System.out.print("Ingrese el nombre del autor: ");
-            autor.setNombre(leer.next());
-            
-            guardarAutor(autor);
+            String nombre = leer.next();
+
+            if (nombre == null || nombre.trim().isEmpty()) {
+                throw new Exception("Debe indicar un nombre válido");
+            }
+
+            Autor autor = new Autor();
+            autor.setNombre(nombre);
+            AutorDAO.guardarAutor(autor);
         } catch (Exception e) {
             throw e;
         }
     }
 
-    public static void guardarAutor(Autor autor) {
+    public static void modificarNombreAutor() throws Exception {
+        Scanner leer = new Scanner(System.in).useDelimiter("\n");
 
+        try {
+            System.out.print("Ingrese el ID del autor que desea editar: ");
+            Integer id = leer.nextInt();
+
+            if (id == null || id <= 0) {
+                throw new Exception("Debe de indicar un ID válido");
+            }
+
+            System.out.print("Ingrese el nuevo nombre del autor: ");
+            String nombre = leer.next();
+
+            if (nombre == null || nombre.trim().isEmpty()) {
+                throw new Exception("Debe ingresar un nombre válido");
+            }
+
+            Autor autor = AutorDAO.buscarAutorPorId(id);
+            autor.setNombre(nombre);
+
+            AutorDAO.modificarAutor(autor);
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public static void eliminarAutor() throws Exception {
+        Scanner leer = new Scanner(System.in).useDelimiter("\n");
+
+        try {
+            System.out.print("Ingrese el ID del autor que desea eliminar: ");
+            Integer id = leer.nextInt();
+
+            if (id == null || id <= 0) {
+                throw new Exception("Debe indicar una ID válida");
+            }
+
+            Autor autor = AutorDAO.buscarAutorPorId(id);
+            AutorDAO.eliminarAutor(autor);
+            autor.setAlta(Boolean.FALSE);
+
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
 }
