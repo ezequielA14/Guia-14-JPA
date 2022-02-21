@@ -3,8 +3,6 @@ package libreria.entidades;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
@@ -14,7 +12,6 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Libro implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
     private Long isbn;
     @Column(unique = true)
@@ -119,9 +116,9 @@ public class Libro implements Serializable {
 
     @Override
     public String toString() {
-        return "isbn: " + isbn + " || titulo: " + titulo + " || year: " + anio 
+        return "\nISBN: " + isbn + " || titulo: " + titulo + " || año: " + anio 
                 + " || ejemplares: " + ejemplares + " || ejemplaresPrestados: " + ejemplaresPrestados 
                 + " || ejemplaresRestantes: " + ejemplaresRestantes + " || alta: " + alta 
-                + " || autor: " + autor + " || editorial: " + editorial;
+                + " || autor: " + autor.getId() + " || editorial: " + editorial.getId() + "\n";
     }
 }

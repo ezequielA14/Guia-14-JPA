@@ -61,7 +61,7 @@ public class Editorial implements Serializable {
 
     @Override
     public String toString() {
-        return "id: " + id + " || nombre: " + nombre + " || alta: " + alta;
+        return "\nid: " + id + " || nombre: " + nombre + " || alta: " + alta + "\n";
     }
 
 }

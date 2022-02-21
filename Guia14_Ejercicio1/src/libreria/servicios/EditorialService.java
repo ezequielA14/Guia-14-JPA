@@ -1,5 +1,6 @@
 package libreria.servicios;
 
+import java.util.List;
 import java.util.Scanner;
 import libreria.entidades.Editorial;
 import libreria.persistencia.EditorialDAO;
@@ -24,11 +25,11 @@ public class EditorialService {
 
             Editorial editorial = new Editorial();
             editorial.setNombre(nombre);
-
+            editorial.setAlta(Boolean.TRUE);
             EditorialDAO.guardarEditorial(editorial);
 
         } catch (Exception e) {
-            throw e;
+            System.out.println("\n" + e.getMessage());
         }
     }
 
@@ -56,7 +57,7 @@ public class EditorialService {
             EditorialDAO.modificarEditorial(editorial);
 
         } catch (Exception e) {
-            throw e;
+            System.out.println("\n" + e.getMessage());
         }
     }
 
@@ -76,7 +77,23 @@ public class EditorialService {
             editorial.setAlta(Boolean.FALSE);
 
         } catch (Exception e) {
-            throw e;
+            System.out.println("\n" + e.getMessage());
+        }
+    }
+
+    public static void imprimirEditoriales() throws Exception {
+        try {
+            List<Editorial> editoriales = EditorialDAO.listarEditoriales();
+
+            if (editoriales.isEmpty()) {
+                throw new Exception("No hay editoriales para imprimir");
+            }
+
+            for (Editorial editorial : editoriales) {
+                System.out.println(editorial);
+            }
+        } catch (Exception e) {
+            System.out.println("\n" + e.getMessage());
         }
     }
 

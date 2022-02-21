@@ -1,5 +1,6 @@
 package libreria.persistencia;
 
+import java.util.List;
 import libreria.entidades.Editorial;
 
 /**
@@ -59,4 +60,16 @@ public class EditorialDAO extends DAO {
         return editorial;
     }
 
+    public static List<Editorial> listarEditoriales() throws Exception {
+        try {
+            conectar();
+            List<Editorial> editoriales = em.createQuery("SELECT e FROM Editorial e", Editorial.class).getResultList();
+            desconectar();
+
+            return editoriales;
+        } catch (Exception e) {
+            desconectar();
+            throw e;
+        }
+    }
 }

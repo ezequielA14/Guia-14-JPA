@@ -1,11 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package libreria.persistencia;
 
-import java.util.ArrayList;
+import java.util.List;
 import libreria.entidades.Libro;
 
 /**
@@ -58,10 +53,10 @@ public class LibroDAO extends DAO {
         }
     }
 
-    public static ArrayList<Libro> listarLibros() {
+    public static List<Libro> listarLibros() {
         try {
             conectar();
-            ArrayList<Libro> libros = (ArrayList) em.createQuery("SELECT l FROM Libro l", Libro.class).getResultList();
+            List<Libro> libros = em.createQuery("SELECT l FROM Libro l").getResultList();
             desconectar();
 
             return libros;
@@ -94,10 +89,10 @@ public class LibroDAO extends DAO {
         }
     }
 
-    public static ArrayList<Libro> buscarLibrosPorAutor(String autor) {
+    public static List<Libro> buscarLibrosPorAutor(String autor) {
         try {
             conectar();
-            ArrayList<Libro> libros = (ArrayList) em.createQuery("SELECT l from Libro l WHERE l.autor.nombre LIKE :autor", Libro.class).setParameter("autor", autor).getResultList();
+            List<Libro> libros = em.createQuery("SELECT l from Libro l WHERE l.autor.nombre LIKE :autor", Libro.class).setParameter("autor", autor).getResultList();
             desconectar();
             return libros;
         } catch (Exception e) {
@@ -105,10 +100,10 @@ public class LibroDAO extends DAO {
         }
     }
 
-    public static ArrayList<Libro> buscarLibrosPorEditorial(String editorial) {
+    public static List<Libro> buscarLibrosPorEditorial(String editorial){
         try {
             conectar();
-            ArrayList<Libro> libros = (ArrayList) em.createQuery("SELECT l from Libro l WHERE l.editorial.nombre LIKE :editorial", Libro.class).setParameter("editorial", editorial).getResultList();
+            List<Libro> libros = em.createQuery("SELECT l from Libro l WHERE l.editorial.nombre LIKE :editorial", Libro.class).setParameter("editorial", editorial).getResultList();
             desconectar();
             return libros;
         } catch (Exception e) {

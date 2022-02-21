@@ -20,9 +20,9 @@ public class Autor implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true)
+//    @Column(unique = true)
     private Integer id;
-    @Column(unique = true)
+//    @Column(unique = true)
     private String nombre;
     private Boolean alta;
 
@@ -61,7 +61,7 @@ public class Autor implements Serializable {
 
     @Override
     public String toString() {
-        return "id: " + id + " || nombre: " + nombre + " || alta: " + alta;
+        return "\nid: " + id + " || nombre: " + nombre + " || alta: " + alta + "\n";
     }
 
 }
