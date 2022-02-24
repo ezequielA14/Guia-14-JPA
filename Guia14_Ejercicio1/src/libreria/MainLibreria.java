@@ -1,6 +1,6 @@
 package libreria;
 
-import libreria.servicios.LimpiarPantalla;
+import libreria.servicios.LimpiarAnt;
 
 /**
  *
@@ -15,7 +15,7 @@ public class MainLibreria {
         } catch (InterruptedException e) {
             System.out.println(e.getMessage() + "\n");
             e.getStackTrace();
-            LimpiarPantalla.limpiarAnt();
+            LimpiarAnt.presionar();
             Menu.menuGeneral();
         }
 

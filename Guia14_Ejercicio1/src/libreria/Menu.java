@@ -1,5 +1,6 @@
 package libreria;
 
+import libreria.servicios.LimpiarAnt;
 import java.util.Scanner;
 import libreria.servicios.*;
 
@@ -13,7 +14,7 @@ public class Menu {
 
     public static void menuGeneral() throws InterruptedException {
         int eleccionG;
-        
+
         try {
             do {
                 System.out.print("ELIJA UNA DE LAS SIGUIENTES OPCIONES NÚMERICAS\n"
@@ -27,35 +28,34 @@ public class Menu {
 
                 switch (eleccionG) {
                     case 1:
-                        LimpiarPantalla.limpiarAntInstantaneo();
+                        LimpiarAnt.instantaneo();
                         menuInsertar();
                         break;
                     case 2:
-                        LimpiarPantalla.limpiarAntInstantaneo();
+                        LimpiarAnt.instantaneo();
                         menuEditar();
                         break;
                     case 3:
-                        LimpiarPantalla.limpiarAntInstantaneo();
+                        LimpiarAnt.instantaneo();
                         menuEliminar();
                         break;
                     case 4:
-                        LimpiarPantalla.limpiarAntInstantaneo();
+                        LimpiarAnt.instantaneo();
                         menuConsultas();
-                        
+
                         break;
                     case 5:
                         System.out.println("\nGracias por utilizar la libreria virtual!");
                         break;
                     default:
                         System.out.println("\nEl número ingresado no corresponde a ninguna opción\n");
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
                 }
             } while (eleccionG != 5);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            LimpiarPantalla.limpiarAnt();
-            menuGeneral();
+            LimpiarAnt.presionar();
         }
     }
 
@@ -74,22 +74,22 @@ public class Menu {
                 switch (eleccionI) {
                     case 1:
                         AutorService.crearAutor();
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
                         break;
                     case 2:
                         EditorialService.crearEditorial();
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
                         break;
                     case 3:
                         LibroService.crearLibro();
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
                         break;
                     case 4:
-                        LimpiarPantalla.limpiarAntInstantaneo();
+                        LimpiarAnt.instantaneo();
                         break;
                     default:
                         System.out.println("El número ingresado no corresponde a ninguna opción");
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
                 }
             } while (eleccionI != 4);
         } catch (Exception e) {
@@ -111,22 +111,22 @@ public class Menu {
                 switch (eleccionE) {
                     case 1:
                         AutorService.modificarNombreAutor();
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
                         break;
                     case 2:
                         EditorialService.modificarNombreEditorial();
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
                         break;
                     case 3:
                         LibroService.modificarTituloLibro();
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
                         break;
                     case 4:
-                        LimpiarPantalla.limpiarAntInstantaneo();
+                        LimpiarAnt.instantaneo();
                         break;
                     default:
                         System.out.println("\nEl número ingresado no corresponde a ninguna opción\n");
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
                 }
             } while (eleccionE != 4);
         } catch (Exception e) {
@@ -148,22 +148,23 @@ public class Menu {
                 switch (eleccionD) {
                     case 1:
                         AutorService.eliminarAutor();
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
                         break;
                     case 2:
                         EditorialService.eliminarEditorial();
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
                         break;
                     case 3:
                         LibroService.eliminarLibro();
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
                         break;
                     case 4:
-                        LimpiarPantalla.limpiarAntInstantaneo();
+                        LimpiarAnt.instantaneo();
                         break;
                     default:
                         System.out.println("\nEl número ingresado no corresponde a ninguna opción\n");
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
+                        LimpiarAnt.presionar();
                 }
             } while (eleccionD != 4);
         } catch (Exception e) {
@@ -182,53 +183,68 @@ public class Menu {
                         + "4. Buscar libro/s por autor.\n"
                         + "5. Buscar libro por editorial\n"
                         + "6. Imprimir autores.\n"
-                        + "7. Imprimir editoriales.\n"
-                        + "8. Imprimir libros.\n"
-                        + "9. Retroceder.\n"
+                        + "7. Imprimir autores eliminados.\n"
+                        + "8. Imprimir editoriales.\n"
+                        + "9. Imprimir editoriales eliminadas.\n"
+                        + "10. Imprimir libros.\n"
+                        + "11. Imprimir libros eliminados.\n"
+                        + "12. Retroceder.\n"
                         + "Elección: ");
                 eleccionC = leer.nextInt();
 
                 switch (eleccionC) {
                     case 1:
                         AutorService.imprimirAutorPorNombre();
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
                         break;
                     case 2:
                         LibroService.imprimirLibroPorISBN();
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
                         break;
                     case 3:
                         LibroService.imprimirLibroPorTitulo();
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
                         break;
                     case 4:
                         LibroService.imprimirLibrosPorAutor();
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
                         break;
                     case 5:
                         LibroService.imprimirLibrosPorEditorial();
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
                         break;
                     case 6:
                         AutorService.imprimirAutores();
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
                         break;
                     case 7:
-                        EditorialService.imprimirEditoriales();
-                        LimpiarPantalla.limpiarAnt();
+                        AutorService.imprimirAutoresEliminados();
+                        LimpiarAnt.presionar();
                         break;
                     case 8:
-                        LibroService.imprimirLibros();
-                        LimpiarPantalla.limpiarAnt();
+                        EditorialService.imprimirEditoriales();
+                        LimpiarAnt.presionar();
                         break;
                     case 9:
-                        LimpiarPantalla.limpiarAntInstantaneo();
+                        EditorialService.imprimirEditorialesEliminadas();
+                        LimpiarAnt.presionar();
+                        break;
+                    case 10:
+                        LibroService.imprimirLibros();
+                        LimpiarAnt.presionar();
+                        break;
+                    case 11:
+                        LibroService.imprimirLibrosEliminados();
+                        LimpiarAnt.presionar();
+                        break;
+                    case 12:
+                        LimpiarAnt.instantaneo();
                         break;
                     default:
                         System.out.println("\nEl número ingresado no corresponde a ninguna opción\n");
-                        LimpiarPantalla.limpiarAnt();
+                        LimpiarAnt.presionar();
                 }
-            } while (eleccionC != 9);
+            } while (eleccionC != 12);
         } catch (Exception e) {
             throw e;
         }

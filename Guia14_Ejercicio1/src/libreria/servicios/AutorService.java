@@ -20,14 +20,17 @@ public class AutorService {
 
             if (nombre == null || nombre.trim().isEmpty()) {
                 throw new Exception("Debe indicar un nombre válido");
+            } else if (AutorDAO.buscarAutorPorNombre(nombre) != null) {
+                throw new Exception("Ya existe un autor con ese nombre en la base de datos");
             }
 
             Autor autor = new Autor();
             autor.setNombre(nombre);
             autor.setAlta(Boolean.TRUE);
             AutorDAO.guardarAutor(autor);
+
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("\n" + e.getMessage());
         }
     }
 
@@ -35,21 +38,21 @@ public class AutorService {
         Scanner leer = new Scanner(System.in).useDelimiter("\n");
 
         try {
-            System.out.print("Ingrese el ID del autor que desea editar: ");
-            Integer id = leer.nextInt();
-
-            if (id == null || id <= 0) {
-                throw new Exception("Debe de indicar un ID válido");
-            }
-
-            System.out.print("Ingrese el nuevo nombre del autor: ");
+            System.out.print("Ingrese el nombre del autor que desea editar: ");
             String nombre = leer.next();
 
             if (nombre == null || nombre.trim().isEmpty()) {
-                throw new Exception("Debe ingresar un nombre válido");
+                throw new Exception("Debe de indicar un nombre válido");
             }
 
-            Autor autor = AutorDAO.buscarAutorPorId(id);
+            System.out.print("Ingrese el nuevo nombre del autor: ");
+            String nuevoNombre = leer.next();
+
+            if (nuevoNombre == null || nuevoNombre.trim().isEmpty() || nuevoNombre.equals(nombre)) {
+                throw new Exception("Debe ingresar un nombre nuevo válido");
+            }
+
+            Autor autor = AutorDAO.buscarAutorPorNombre(nombre);
             autor.setNombre(nombre);
 
             AutorDAO.modificarAutor(autor);
@@ -63,16 +66,23 @@ public class AutorService {
         Scanner leer = new Scanner(System.in).useDelimiter("\n");
 
         try {
-            System.out.print("Ingrese el ID del autor que desea eliminar: ");
-            Integer id = leer.nextInt();
+            System.out.print("Ingrese el nombre del autor que desea eliminar: ");
+            String nombre = leer.next();
 
-            if (id == null || id <= 0) {
-                throw new Exception("Debe indicar una ID válida");
+            if (nombre == null || nombre.trim().isEmpty()) {
+                throw new Exception("Debe indicar un nombre válido");
             }
 
-            Autor autor = AutorDAO.buscarAutorPorId(id);
-            AutorDAO.eliminarAutor(autor);
-            autor.setAlta(Boolean.FALSE);
+            Autor autor = AutorDAO.buscarAutorPorNombre(nombre);
+            if (autor.getAlta()) {
+                autor.setAlta(Boolean.FALSE);
+                System.out.println("El autor ha sido eliminado");
+            } else {
+                System.out.println("El autor ya está eliminado");
+            }
+
+//            AutorDAO.eliminarAutor(autor); En este caso el ejercicio pide que no lo eliminemos, que le pongamos que el alta es FALSE.
+            AutorDAO.modificarAutor(autor);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -83,6 +93,23 @@ public class AutorService {
         try {
 
             List<Autor> autores = AutorDAO.listarAutores();
+
+            if (autores.isEmpty()) {
+                throw new Exception("No hay autores para imprimir");
+            }
+
+            for (Autor autor : autores) {
+                System.out.println(autor);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    public static void imprimirAutoresEliminados() throws Exception {
+        try {
+
+            List<Autor> autores = AutorDAO.listarAutoresEliminados();
 
             if (autores.isEmpty()) {
                 throw new Exception("No hay autores para imprimir");
@@ -107,16 +134,15 @@ public class AutorService {
             }
 
             Autor autor = AutorDAO.buscarAutorPorNombre(nombre);
-            
+
             if (autor == null) {
                 throw new Exception("No existe ningún autor con ese nombre");
             }
-            
+
             System.out.println(autor);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-
 }

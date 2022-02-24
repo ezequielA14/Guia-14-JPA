@@ -56,7 +56,20 @@ public class LibroDAO extends DAO {
     public static List<Libro> listarLibros() {
         try {
             conectar();
-            List<Libro> libros = em.createQuery("SELECT l FROM Libro l").getResultList();
+            List<Libro> libros = em.createQuery("SELECT l FROM Libro l WHERE l.alta = true").getResultList();
+            desconectar();
+
+            return libros;
+        } catch (Exception e) {
+            desconectar();
+            throw e;
+        }
+    }
+    
+    public static List<Libro> listarLibrosEliminados() {
+        try {
+            conectar();
+            List<Libro> libros = em.createQuery("SELECT l FROM Libro l WHERE l.alta = false").getResultList();
             desconectar();
 
             return libros;
@@ -100,7 +113,7 @@ public class LibroDAO extends DAO {
         }
     }
 
-    public static List<Libro> buscarLibrosPorEditorial(String editorial){
+    public static List<Libro> buscarLibrosPorEditorial(String editorial) {
         try {
             conectar();
             List<Libro> libros = em.createQuery("SELECT l from Libro l WHERE l.editorial.nombre LIKE :editorial", Libro.class).setParameter("editorial", editorial).getResultList();

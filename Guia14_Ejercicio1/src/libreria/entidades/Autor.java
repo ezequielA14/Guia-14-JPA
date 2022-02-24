@@ -20,10 +20,12 @@ public class Autor implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(unique = true)
+    @Column(unique = true)
     private Integer id;
-//    @Column(unique = true)
+    
+    @Column(unique = true)
     private String nombre;
+    
     private Boolean alta;
 
     public Autor() {

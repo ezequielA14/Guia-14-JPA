@@ -3,9 +3,7 @@ package libreria.servicios;
 import java.util.List;
 import java.util.Scanner;
 import libreria.entidades.*;
-import libreria.persistencia.AutorDAO;
-import libreria.persistencia.EditorialDAO;
-import libreria.persistencia.LibroDAO;
+import libreria.persistencia.*;
 
 /**
  *
@@ -18,27 +16,20 @@ public class LibroService {
 
         try {
 
-            System.out.print("Ingrese el ID del autor del libro: ");
-            Integer idAutor = leer.nextInt();
-            Autor autor = AutorDAO.buscarAutorPorId(idAutor);
+            System.out.print("Ingrese el nombre del autor del libro: ");
+            String nombreA = leer.next();
+            Autor autor = AutorDAO.buscarAutorPorNombre(nombreA);
 
             if (autor == null) {
-                throw new Exception("Debe indicar un ID de autor válido.");
+                throw new Exception("Debe indicar un nombre de autor válido.");
             }
 
-            System.out.print("Ingrese el ID de la editorial del libro: ");
-            Integer idEditorial = leer.nextInt();
-            Editorial editorial = EditorialDAO.buscarEditorialPorId(idEditorial);
+            System.out.print("Ingrese el nombre de la editorial del libro: ");
+            String nombreE = leer.next();
+            Editorial editorial = EditorialDAO.buscarEditorialPorNombre(nombreE);
 
             if (editorial == null) {
-                throw new Exception("Debe indicar un ID de editorial válido.");
-            }
-
-            System.out.print("Ingrese el número de ISBN: ");
-            Long isbn = leer.nextLong();
-
-            if (isbn == null || isbn.toString().length() <= 12) {
-                throw new Exception("Debe indicar un número de ISBN válido");
+                throw new Exception("Debe indicar un nombre de editorial válido.");
             }
 
             System.out.print("Ingrese el titulo del libro: ");
@@ -46,6 +37,8 @@ public class LibroService {
 
             if (titulo == null || titulo.trim().isEmpty()) {
                 throw new Exception("Debe indicar un titulo válido");
+            } else if (LibroDAO.buscarLibroPorTitulo(titulo) != null) {
+                throw new Exception("Ya existe un libro con ese titulo en la base de datos");
             }
 
             System.out.print("Ingrese el año de lanzamiento del libro: ");
@@ -68,15 +61,14 @@ public class LibroService {
             if (ejemplaresPrestados == null || ejemplaresPrestados < 0 || ejemplaresPrestados > ejemplares) {
                 throw new Exception("Debe indicar una cantidad de ejemplares prestados válida");
             }
-            
+
             Integer ejemplaresRestantes = ejemplares - ejemplaresPrestados;
-            
+
             if (ejemplaresRestantes == null || ejemplaresRestantes < 0) {
                 throw new Exception("Los ejemplares restantes no pueden ser menor a cero (0) o nulos");
             }
 
             Libro libro = new Libro();
-            libro.setIsbn(isbn);
             libro.setTitulo(titulo);
             libro.setAnio(anio);
             libro.setEjemplares(ejemplares);
@@ -95,22 +87,22 @@ public class LibroService {
         Scanner leer = new Scanner(System.in).useDelimiter("\n");
 
         try {
-            System.out.print("Ingrese el número de ISBN del libro que desea editar: ");
-            Long isbn = leer.nextLong();
-
-            if (isbn == null || isbn <= 0) {
-                throw new Exception("Debe de indicar un número de ISBN válido");
-            }
-
-            System.out.print("Ingrese el nuevo titulo del libro: ");
+            System.out.print("Ingrese el titulo del libro que desea editar: ");
             String titulo = leer.next();
 
             if (titulo == null || titulo.trim().isEmpty()) {
+                throw new Exception("Debe de indicar un titulo válido");
+            }
+
+            System.out.print("Ingrese el nuevo titulo del libro: ");
+            String tituloNuevo = leer.next();
+
+            if (tituloNuevo == null || tituloNuevo.trim().isEmpty() || tituloNuevo.equals(titulo)) {
                 throw new Exception("Debe ingresar un titulo válido");
             }
 
-            Libro libro = LibroDAO.buscarLibroPorISBN(isbn);
-            libro.setTitulo(titulo);
+            Libro libro = LibroDAO.buscarLibroPorTitulo(titulo);
+            libro.setTitulo(tituloNuevo);
 
             LibroDAO.modificarLibro(libro);
 
@@ -131,8 +123,15 @@ public class LibroService {
             }
 
             Libro libro = LibroDAO.buscarLibroPorTitulo(titulo);
-            LibroDAO.eliminarLibro(libro);
-//            libro.setAlta(Boolean.FALSE);
+            if (libro.getAlta()) {
+                libro.setAlta(Boolean.FALSE);
+                System.out.println("El libro ha sido eliminado");
+            } else {
+                System.out.println("El libro ya está eliminado");
+            }
+
+//            LibroDAO.eliminarLibro(libro); En este caso el ejercicio pide que no lo eliminemos, que le pongamos que el alta es FALSE.
+            LibroDAO.modificarLibro(libro);
 
         } catch (Exception e) {
             throw e;
@@ -155,6 +154,22 @@ public class LibroService {
         }
     }
 
+    public static void imprimirLibrosEliminados() throws Exception {
+        try {
+            List<Libro> libros = LibroDAO.listarLibrosEliminados();
+
+            if (libros.isEmpty()) {
+                throw new Exception("No hay libros para imprimir.");
+            }
+
+            for (Libro libro : libros) {
+                System.out.println(libro.toString());
+            }
+        } catch (Exception e) {
+            System.out.println("\n" + e.getMessage());
+        }
+    }
+
     public static void imprimirLibroPorISBN() throws Exception {
         Scanner leer = new Scanner(System.in).useDelimiter("\n");
 
@@ -162,16 +177,16 @@ public class LibroService {
             System.out.print("Ingrese el número de ISBN del libro: ");
             Long isbn = leer.nextLong();
 
-            if (isbn == null || isbn <= 12) {
+            if (isbn == null || isbn <= 0) {
                 throw new Exception("Debe indicar un número de ISBN válido");
             }
 
             Libro libro = LibroDAO.buscarLibroPorISBN(isbn);
-            
+
             if (libro == null) {
                 throw new Exception("No existe ningún libro con ese número de ISBN");
             }
-            
+
             System.out.println(libro);
 
         } catch (Exception e) {
@@ -188,9 +203,9 @@ public class LibroService {
             if (titulo == null || titulo.trim().isEmpty()) {
                 throw new Exception("Debe indicar un titulo válido");
             }
-            
+
             Libro libro = LibroDAO.buscarLibroPorTitulo(titulo);
-            
+
             if (libro == null) {
                 throw new Exception("No existe ningún libro con ese titulo");
             }
@@ -211,9 +226,9 @@ public class LibroService {
             if (autor == null || autor.trim().isEmpty()) {
                 throw new Exception("Debe indicar un nombre de autor válido");
             }
-            
+
             List<Libro> libros = LibroDAO.buscarLibrosPorAutor(autor);
-            
+
             if (libros == null) {
                 throw new Exception("No existe ningún libro con ese autor");
             }
@@ -236,9 +251,9 @@ public class LibroService {
             if (editorial == null || editorial.trim().isEmpty()) {
                 throw new Exception("Debe indicar un nombre de editorial válido");
             }
-            
+
             List<Libro> libros = LibroDAO.buscarLibrosPorEditorial(editorial);
-            
+
             if (libros == null) {
                 throw new Exception("No existe ningún libro con esa editorial");
             }

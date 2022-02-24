@@ -60,10 +60,30 @@ public class EditorialDAO extends DAO {
         return editorial;
     }
 
+    public static Editorial buscarEditorialPorNombre(String nombre) {
+        conectar();
+        Editorial editorial = em.createQuery("SELECT e FROM Editorial e WHERE e.nombre = :nombre", Editorial.class).setParameter("nombre", nombre).getSingleResult();
+        desconectar();
+        return editorial;
+    }
+
     public static List<Editorial> listarEditoriales() throws Exception {
         try {
             conectar();
-            List<Editorial> editoriales = em.createQuery("SELECT e FROM Editorial e", Editorial.class).getResultList();
+            List<Editorial> editoriales = em.createQuery("SELECT e FROM Editorial e WHERE e.alta = true", Editorial.class).getResultList();
+            desconectar();
+
+            return editoriales;
+        } catch (Exception e) {
+            desconectar();
+            throw e;
+        }
+    }
+    
+    public static List<Editorial> listarEditorialesEliminadas() throws Exception {
+        try {
+            conectar();
+            List<Editorial> editoriales = em.createQuery("SELECT e FROM Editorial e WHERE e.alta = false", Editorial.class).getResultList();
             desconectar();
 
             return editoriales;

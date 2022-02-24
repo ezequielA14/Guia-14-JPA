@@ -75,7 +75,20 @@ public class AutorDAO extends DAO {
     public static List<Autor> listarAutores() {
         try {
             conectar();
-            List<Autor> autores = em.createQuery("SELECT a FROM Autor a").getResultList();
+            List<Autor> autores = em.createQuery("SELECT a FROM Autor a WHERE a.alta = true", Autor.class).getResultList();
+            desconectar();
+
+            return autores;
+        } catch (Exception e) {
+            desconectar();
+            throw e;
+        }
+    }
+    
+    public static List<Autor> listarAutoresEliminados() {
+        try {
+            conectar();
+            List<Autor> autores = em.createQuery("SELECT a FROM Autor a WHERE a.alta = false", Autor.class).getResultList();
             desconectar();
 
             return autores;

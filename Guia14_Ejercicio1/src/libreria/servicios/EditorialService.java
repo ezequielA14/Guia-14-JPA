@@ -21,6 +21,8 @@ public class EditorialService {
 
             if (nombre == null || nombre.trim().isEmpty()) {
                 throw new Exception("Debe ingresar un nombre para la editorial.");
+            } else if (EditorialDAO.buscarEditorialPorNombre(nombre) != null) {
+                throw new Exception("Ya existe una editorial con ese nombre en la base de datos");
             }
 
             Editorial editorial = new Editorial();
@@ -65,16 +67,23 @@ public class EditorialService {
         Scanner leer = new Scanner(System.in).useDelimiter("\n");
 
         try {
-            System.out.print("Ingrese el ID de la editorial que desea eliminar: ");
-            Integer id = leer.nextInt();
+            System.out.print("Ingrese el nombre de la editorial que desea eliminar: ");
+            String nombre = leer.next();
 
-            if (id == null || id <= 0) {
+            if (nombre == null || nombre.trim().isEmpty()) {
                 throw new Exception("Debe indicar una ID válida");
             }
 
-            Editorial editorial = EditorialDAO.buscarEditorialPorId(id);
-            EditorialDAO.eliminarEditorial(editorial);
-            editorial.setAlta(Boolean.FALSE);
+            Editorial editorial = EditorialDAO.buscarEditorialPorNombre(nombre);
+            if (editorial.getAlta()) {
+                editorial.setAlta(Boolean.FALSE);
+                System.out.println("La editorial ha sido eliminada");
+            } else {
+                System.out.println("La editorial ya ha sido eliminada");
+            }
+
+//            EditorialDAO.eliminarEditorial(editorial); Es mala practica eliminar tuplas.
+            EditorialDAO.modificarEditorial(editorial);
 
         } catch (Exception e) {
             System.out.println("\n" + e.getMessage());
@@ -84,6 +93,22 @@ public class EditorialService {
     public static void imprimirEditoriales() throws Exception {
         try {
             List<Editorial> editoriales = EditorialDAO.listarEditoriales();
+
+            if (editoriales.isEmpty()) {
+                throw new Exception("No hay editoriales para imprimir");
+            }
+
+            for (Editorial editorial : editoriales) {
+                System.out.println(editorial);
+            }
+        } catch (Exception e) {
+            System.out.println("\n" + e.getMessage());
+        }
+    }
+
+    public static void imprimirEditorialesEliminadas() throws Exception {
+        try {
+            List<Editorial> editoriales = EditorialDAO.listarEditorialesEliminadas();
 
             if (editoriales.isEmpty()) {
                 throw new Exception("No hay editoriales para imprimir");
