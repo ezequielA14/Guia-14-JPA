@@ -1,6 +1,6 @@
 package libreria;
 
-import libreria.servicios.LimpiarAnt;
+import limpiarPantalla.LimpiarAnt;
 
 /**
  *

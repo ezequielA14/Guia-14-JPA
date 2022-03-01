@@ -63,7 +63,7 @@ public class Autor implements Serializable {
 
     @Override
     public String toString() {
-        return "\nid: " + id + " || nombre: " + nombre + " || alta: " + alta + "\n";
+        return "\nId: " + id + " || nombre: " + nombre + " || alta: " + alta + "\n";
     }
 
 }

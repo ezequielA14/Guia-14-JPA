@@ -1,4 +1,4 @@
-package libreria.servicios;
+package limpiarPantalla;
 
     import java.awt.AWTException ;
     import java.awt.event.KeyEvent ;
@@ -39,5 +39,4 @@ package libreria.servicios;
             }
 
         }
-
     }

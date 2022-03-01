@@ -52,8 +52,53 @@ public class LibroDAO extends DAO {
             throw e;
         }
     }
+    
+    public static Libro buscarLibroPorISBN(Long isbn) throws Exception {
+        try {
+            conectar();
+            Libro libro = em.find(Libro.class, isbn);
+            desconectar();
+            return libro;
+        } catch (Exception e) {
+            return null;
+        }
 
-    public static List<Libro> listarLibros() {
+    }
+
+    public static Libro buscarLibroPorTitulo(String titulo) throws Exception {
+        try {
+            conectar();
+            Libro libro = em.createQuery("SELECT l FROM Libro l WHERE l.titulo LIKE :titulo", Libro.class).setParameter("titulo", titulo).getSingleResult();
+            desconectar();
+            return libro;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static List<Libro> buscarLibrosPorAutor(String autor) throws Exception {
+        try {
+            conectar();
+            List<Libro> libros = em.createQuery("SELECT l from Libro l WHERE l.autor.nombre LIKE :autor", Libro.class).setParameter("autor", autor).getResultList();
+            desconectar();
+            return libros;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static List<Libro> buscarLibrosPorEditorial(String editorial) throws Exception {
+        try {
+            conectar();
+            List<Libro> libros = em.createQuery("SELECT l from Libro l WHERE l.editorial.nombre LIKE :editorial", Libro.class).setParameter("editorial", editorial).getResultList();
+            desconectar();
+            return libros;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static List<Libro> listarLibros() throws Exception {
         try {
             conectar();
             List<Libro> libros = em.createQuery("SELECT l FROM Libro l WHERE l.alta = true").getResultList();
@@ -66,7 +111,7 @@ public class LibroDAO extends DAO {
         }
     }
     
-    public static List<Libro> listarLibrosEliminados() {
+    public static List<Libro> listarLibrosEliminados() throws Exception {
         try {
             conectar();
             List<Libro> libros = em.createQuery("SELECT l FROM Libro l WHERE l.alta = false").getResultList();
@@ -75,51 +120,6 @@ public class LibroDAO extends DAO {
             return libros;
         } catch (Exception e) {
             desconectar();
-            throw e;
-        }
-    }
-
-    public static Libro buscarLibroPorISBN(Long isbn) {
-        try {
-            conectar();
-            Libro libro = em.find(Libro.class, isbn);
-            desconectar();
-            return libro;
-        } catch (Exception e) {
-            throw e;
-        }
-
-    }
-
-    public static Libro buscarLibroPorTitulo(String titulo) {
-        try {
-            conectar();
-            Libro libro = em.createQuery("SELECT l FROM Libro l WHERE l.titulo LIKE :titulo", Libro.class).setParameter("titulo", titulo).getSingleResult();
-            desconectar();
-            return libro;
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-    public static List<Libro> buscarLibrosPorAutor(String autor) {
-        try {
-            conectar();
-            List<Libro> libros = em.createQuery("SELECT l from Libro l WHERE l.autor.nombre LIKE :autor", Libro.class).setParameter("autor", autor).getResultList();
-            desconectar();
-            return libros;
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-    public static List<Libro> buscarLibrosPorEditorial(String editorial) {
-        try {
-            conectar();
-            List<Libro> libros = em.createQuery("SELECT l from Libro l WHERE l.editorial.nombre LIKE :editorial", Libro.class).setParameter("editorial", editorial).getResultList();
-            desconectar();
-            return libros;
-        } catch (Exception e) {
             throw e;
         }
     }

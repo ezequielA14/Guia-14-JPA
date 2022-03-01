@@ -126,7 +126,7 @@ public class Libro implements Serializable {
     public String toString() {
         return "\nISBN: " + isbn + " || titulo: " + titulo + " || año: " + anio
                 + " || ejemplares: " + ejemplares + " || ejemplaresPrestados: " + ejemplaresPrestados
-                + " || ejemplaresRestantes: " + ejemplaresRestantes + " || alta: " + alta
-                + " || autor: " + autor.getId() + " || editorial: " + editorial.getId() + "\n";
+                + " || ejemplaresRestantes: " + ejemplaresRestantes + " || autor: " + autor.getNombre() 
+                + " || editorial: " + editorial.getNombre() + " || alta: " + alta + "\n";
     }
 }

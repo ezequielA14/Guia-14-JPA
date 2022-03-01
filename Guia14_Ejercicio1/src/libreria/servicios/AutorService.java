@@ -105,7 +105,7 @@ public class AutorService {
             System.out.println(e.getMessage());
         }
     }
-    
+
     public static void imprimirAutoresEliminados() throws Exception {
         try {
 

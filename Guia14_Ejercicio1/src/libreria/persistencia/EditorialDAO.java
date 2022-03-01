@@ -53,18 +53,26 @@ public class EditorialDAO extends DAO {
         }
     }
 
-    public static Editorial buscarEditorialPorId(Integer id) {
-        conectar();
-        Editorial editorial = em.find(Editorial.class, id);
-        desconectar();
-        return editorial;
+    public static Editorial buscarEditorialPorId(Integer id) throws Exception {
+        try {
+            conectar();
+            Editorial editorial = em.find(Editorial.class, id);
+            desconectar();
+            return editorial;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
-    public static Editorial buscarEditorialPorNombre(String nombre) {
-        conectar();
-        Editorial editorial = em.createQuery("SELECT e FROM Editorial e WHERE e.nombre = :nombre", Editorial.class).setParameter("nombre", nombre).getSingleResult();
-        desconectar();
-        return editorial;
+    public static Editorial buscarEditorialPorNombre(String nombre) throws Exception {
+        try {
+            conectar();
+            Editorial editorial = em.createQuery("SELECT e FROM Editorial e WHERE e.nombre = :nombre", Editorial.class).setParameter("nombre", nombre).getSingleResult();
+            desconectar();
+            return editorial;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public static List<Editorial> listarEditoriales() throws Exception {
@@ -79,7 +87,7 @@ public class EditorialDAO extends DAO {
             throw e;
         }
     }
-    
+
     public static List<Editorial> listarEditorialesEliminadas() throws Exception {
         try {
             conectar();

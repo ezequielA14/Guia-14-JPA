@@ -54,11 +54,16 @@ public class AutorDAO extends DAO {
         }
     }
 
-    public static Autor buscarAutorPorId(Integer id) {
-        conectar();
-        Autor autor = em.find(Autor.class, id);
-        desconectar();
-        return autor;
+    public static Autor buscarAutorPorId(Integer id) throws Exception {
+        try {
+            conectar();
+            Autor autor = em.find(Autor.class, id);
+            desconectar();
+            return autor;
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
     public static Autor buscarAutorPorNombre(String nombre) throws Exception {
@@ -68,11 +73,11 @@ public class AutorDAO extends DAO {
             desconectar();
             return autor;
         } catch (Exception e) {
-            throw e;
+            return null;
         }
     }
 
-    public static List<Autor> listarAutores() {
+    public static List<Autor> listarAutores() throws Exception {
         try {
             conectar();
             List<Autor> autores = em.createQuery("SELECT a FROM Autor a WHERE a.alta = true", Autor.class).getResultList();
@@ -84,8 +89,8 @@ public class AutorDAO extends DAO {
             throw e;
         }
     }
-    
-    public static List<Autor> listarAutoresEliminados() {
+
+    public static List<Autor> listarAutoresEliminados() throws Exception {
         try {
             conectar();
             List<Autor> autores = em.createQuery("SELECT a FROM Autor a WHERE a.alta = false", Autor.class).getResultList();
