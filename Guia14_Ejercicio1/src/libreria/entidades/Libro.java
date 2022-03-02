@@ -15,7 +15,7 @@ import javax.persistence.ManyToOne;
 public class Libro implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
     private Long isbn;
 
