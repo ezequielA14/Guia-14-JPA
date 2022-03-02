@@ -55,25 +55,12 @@ public class LibroService {
                 throw new Exception("Debe indicar una cantidad de ejemplares válida");
             }
 
-            System.out.print("Ingrese la cantidad de ejemplares prestados del libro: ");
-            Integer ejemplaresPrestados = leer.nextInt();
-
-            if (ejemplaresPrestados == null || ejemplaresPrestados < 0 || ejemplaresPrestados > ejemplares) {
-                throw new Exception("Debe indicar una cantidad de ejemplares prestados válida");
-            }
-
-            Integer ejemplaresRestantes = ejemplares - ejemplaresPrestados;
-
-            if (ejemplaresRestantes == null || ejemplaresRestantes < 0) {
-                throw new Exception("Los ejemplares restantes no pueden ser menor a cero (0) o nulos");
-            }
-
             Libro libro = new Libro();
             libro.setTitulo(titulo);
             libro.setAnio(anio);
             libro.setEjemplares(ejemplares);
-            libro.setEjemplaresPrestados(ejemplaresPrestados);
-            libro.setEjemplaresRestantes(ejemplaresRestantes);
+            libro.setEjemplaresPrestados(0);
+            libro.setEjemplaresRestantes(ejemplares);
             libro.setAutor(autor);
             libro.setEditorial(editorial);
             libro.setAlta(Boolean.TRUE);
@@ -104,6 +91,36 @@ public class LibroService {
             Libro libro = LibroDAO.buscarLibroPorTitulo(titulo);
             libro.setTitulo(tituloNuevo);
 
+            LibroDAO.modificarLibro(libro);
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+    
+    public static void modificarEjemplaresPrestarLibro(Libro libro) throws Exception {
+        try {
+            if (libro == null) {
+                throw new Exception("Debe ingresar un libro valido");
+            }
+            
+            libro.setEjemplaresRestantes(libro.getEjemplaresRestantes() - 1);
+            libro.setEjemplaresPrestados(libro.getEjemplaresPrestados() + 1);
+            LibroDAO.modificarLibro(libro);
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+    
+    public static void modificarEjemplaresDevolverLibro(Libro libro) throws Exception {
+        try {
+            if (libro == null) {
+                throw new Exception("Debe ingresar un libro valido");
+            }
+            
+            libro.setEjemplaresRestantes(libro.getEjemplaresRestantes() + 1);
+            libro.setEjemplaresPrestados(libro.getEjemplaresPrestados() - 1);
             LibroDAO.modificarLibro(libro);
 
         } catch (Exception e) {

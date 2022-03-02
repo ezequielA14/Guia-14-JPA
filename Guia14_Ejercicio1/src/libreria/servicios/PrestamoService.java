@@ -24,32 +24,6 @@ public class PrestamoService {
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 
         try {
-            /// guardamos la fecha actual para comparar con la de devolución
-            Date fechaActual = new Date();
-            /// lo dividimos en dias, meses y años para guardarlos en un String ordenados y el formato.parse funcione
-            int[] date = {fechaActual.getDate(), fechaActual.getMonth() + 1, fechaActual.getYear() + 1900};
-            /// Hacemos un string con la fecha y el formato correspondiente
-            String fechaActSt = date[0] + "/" + date[1] + "/" + date[2];
-            fechaActual = formato.parse(fechaActSt);
-            System.out.println("La fecha actual es: " + fechaActSt);
-            
-            /// Le pide la fecha de devolución como String al usuario
-            System.out.print("Ingrese la fecha de devolucion: ");
-            String fechaDevSt = leer.next();
-
-            /// Valida que la fecha no esté vacia
-            if (fechaDevSt == null || fechaDevSt.trim().isEmpty()) {
-                throw new Exception("La fecha no puede estar vacia");
-            }
-            
-            /// Parsea la fecha de String a Date.
-            Date fechaDevolucion = formato.parse(fechaDevSt);
-            
-            /// Valida que el usuario ingrese una fecha posterior a la actual
-            if (fechaDevolucion.before(fechaActual)) {
-                throw new Exception("La fecha de devolucion no puede ser anterior a la actual");
-            }
-
             /// Le pide el título del libro al usuario
             System.out.print("Ingrese el titulo del libro del prestamo: ");
             String titulo = leer.next();
@@ -65,6 +39,37 @@ public class PrestamoService {
             /// Valida que la instancia de libro no sea null
             if (libro == null) {
                 throw new Exception("El libro no existe en la base de datos");
+            }
+
+            /// Valida que todavia haya ejemplares del libro
+            if (libro.getEjemplaresRestantes() < 1) {
+                throw new Exception("No quedan más ejemplares del libro");
+            }
+
+            /// guardamos la fecha actual para comparar con la de devolución
+            Date fechaActual = new Date();
+            /// lo dividimos en dias, meses y años para guardarlos en un String ordenados y el formato.parse funcione
+            int[] date = {fechaActual.getDate(), fechaActual.getMonth() + 1, fechaActual.getYear() + 1900};
+            /// Hacemos un string con la fecha y el formato correspondiente
+            String fechaActSt = date[0] + "/" + date[1] + "/" + date[2];
+            fechaActual = formato.parse(fechaActSt);
+            System.out.println("La fecha actual es: " + fechaActSt);
+
+            /// Le pide la fecha de devolución como String al usuario
+            System.out.print("Ingrese la fecha de devolucion: ");
+            String fechaDevSt = leer.next();
+
+            /// Valida que la fecha no esté vacia
+            if (fechaDevSt == null || fechaDevSt.trim().isEmpty()) {
+                throw new Exception("La fecha no puede estar vacia");
+            }
+
+            /// Parsea la fecha de String a Date.
+            Date fechaDevolucion = formato.parse(fechaDevSt);
+
+            /// Valida que el usuario ingrese una fecha posterior a la actual
+            if (fechaDevolucion.before(fechaActual)) {
+                throw new Exception("La fecha de devolucion no puede ser anterior a la actual");
             }
 
             /// Le pide el documento del cliente al usuario
@@ -83,6 +88,9 @@ public class PrestamoService {
             if (cliente == null) {
                 throw new Exception("El cliente no existe en la base de datos");
             }
+
+            /// Se modifican los ejemplares restantes(resta 1) y los ejemplares prestados(suma 1) del libro
+            LibroService.modificarEjemplaresPrestarLibro(libro);
 
             Prestamo prestamo = new Prestamo();
             prestamo.setFechaPrestamo(fechaActual);
@@ -117,6 +125,15 @@ public class PrestamoService {
                 throw new Exception("No existe ningún prestamo con ese id");
             }
 
+            if (prestamo.getLibro().getEjemplaresPrestados() < 1 || prestamo.getLibro().getEjemplaresRestantes() >= prestamo.getLibro().getEjemplares()) {
+                throw new Exception("No es posible devolver más ejemplares");
+            }
+
+            if (prestamo.getDevuelto() == true) {
+                throw new Exception("El libro ya ha sido devuelto");
+            }
+
+            LibroService.modificarEjemplaresDevolverLibro(prestamo.getLibro());
             prestamo.setDevuelto(Boolean.TRUE);
             PrestamoDAO.modificarPrestamo(prestamo);
 
@@ -145,19 +162,19 @@ public class PrestamoService {
             System.out.println("\n" + e.getMessage());
         }
     }
-    
+
     public static void imprimirPrestamosPorDocumentoCliente() throws Exception {
         try {
             System.out.print("Ingrese el documento del cliente: ");
             Long documento = leer.nextLong();
-            
+
             if (documento <= 0) {
                 throw new Exception("Debe indicar un documento válido");
             }
             if (ClienteDAO.buscarClientePorDocumento(documento) == null) {
                 throw new Exception("No existe ningun cliente con ese documento");
             }
-            
+
             List<Prestamo> prestamos = PrestamoDAO.buscarPrestamosPorDocumentoCliente(documento);
 
             if (prestamos.isEmpty()) {
@@ -171,7 +188,7 @@ public class PrestamoService {
             System.out.println("\n" + e.getMessage());
         }
     }
-    
+
     public static void imprimirPrestamos() throws Exception {
         try {
             List<Prestamo> prestamos = PrestamoDAO.listarPrestamos();
